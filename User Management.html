@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <div class="max-w-7xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-blue-800">User Management</h1>
+
+    <!-- Add User Form -->
+    <div class="bg-white shadow-lg rounded-xl p-6 mb-10">
+      <h2 class="text-xl font-semibold mb-4">Add New User</h2>
+      <form id="userForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <input type="text" placeholder="Full Name" class="p-3 border border-gray-300 rounded-lg" required>
+        <input type="email" placeholder="Email Address" class="p-3 border border-gray-300 rounded-lg" required>
+        <select class="p-3 border border-gray-300 rounded-lg" required>
+          <option value="">Select Role</option>
+          <option value="Admin">Admin</option>
+          <option value="Doctor">Doctor</option>
+          <option value="Legal Officer">Legal Officer</option>
+          <option value="Data Entry">Data Entry</option>
+        </select>
+        <input type="password" placeholder="Password" class="p-3 border border-gray-300 rounded-lg" required>
+        <button type="submit" class="col-span-1 sm:col-span-2 bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-800">Create User</button>
+      </form>
+    </div>
+
+    <!-- User List Table -->
+    <div class="bg-white shadow-lg rounded-xl p-6">
+      <h2 class="text-xl font-semibold mb-4">Registered Users</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full table-auto border-collapse">
+          <thead>
+            <tr class="bg-blue-100">
+              <th class="p-3 text-left">Name</th>
+              <th class="p-3 text-left">Email</th>
+              <th class="p-3 text-left">Role</th>
+              <th class="p-3 text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTable" class="text-sm">
+            <!-- Users will be added here dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("userForm");
+    const userTable = document.getElementById("userTable");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const values = [...form.elements].map(el => el.value);
+      const row = `<tr class="border-b hover:bg-gray-50">
+        <td class="p-3">${values[0]}</td>
+        <td class="p-3">${values[1]}</td>
+        <td class="p-3">${values[2]}</td>
+        <td class="p-3">
+          <button onclick="this.closest('tr').remove()" class="text-red-600 hover:underline">Delete</button>
+        </td>
+      </tr>`;
+      userTable.innerHTML += row;
+      form.reset();
+    });
+  </script>
+
+</body>
+</html>

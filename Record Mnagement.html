@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Record Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+  <div class="max-w-7xl mx-auto px-6 py-10">
+    <!-- Title -->
+    <h1 class="text-3xl font-bold mb-8 text-blue-800">Medico-Legal Record Management</h1>
+
+    <!-- Record Form -->
+    <div class="bg-white rounded-xl shadow p-6 mb-10">
+      <h2 class="text-2xl font-semibold mb-4">Add New Record</h2>
+      <form id="recordForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="text" placeholder="Patient Name" class="p-3 border rounded-lg" required>
+        <input type="text" placeholder="Patient ID" class="p-3 border rounded-lg" required>
+
+        <select class="p-3 border rounded-lg" required>
+          <option value="">Case Type</option>
+          <option value="Accident">Accident</option>
+          <option value="Assault">Assault</option>
+          <option value="Post-Mortem">Post-Mortem</option>
+        </select>
+
+        <input type="datetime-local" class="p-3 border rounded-lg" required>
+
+        <select class="p-3 border rounded-lg" required>
+          <option value="">Department</option>
+          <option>Emergency</option>
+          <option>Orthopedics</option>
+          <option>Forensic Medicine</option>
+          <option>Surgery</option>
+          <option>OBG</option>
+          <option>Psychiatry</option>
+          <option>Internal Medicine</option>
+        </select>
+
+        <input type="text" placeholder="Involved Staff" class="p-3 border rounded-lg" required>
+
+        <select class="p-3 border rounded-lg" required>
+          <option>Status</option>
+          <option>Open</option>
+          <option>Pending</option>
+          <option>Closed</option>
+        </select>
+
+        <input type="file" multiple class="p-3 border rounded-lg col-span-1 md:col-span-2" />
+
+        <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg col-span-1 md:col-span-2">
+          Save Record
+        </button>
+      </form>
+    </div>
+
+    <!-- Records Table -->
+    <div class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-2xl font-semibold mb-4">Saved Records</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full table-auto">
+          <thead>
+            <tr class="bg-blue-100 text-gray-700">
+              <th class="p-3 text-left">Patient Name</th>
+              <th class="p-3 text-left">Case Type</th>
+              <th class="p-3 text-left">Date/Time</th>
+              <th class="p-3 text-left">Department</th>
+              <th class="p-3 text-left">Staff</th>
+              <th class="p-3 text-left">Status</th>
+              <th class="p-3 text-left">Action</th>
+            </tr>
+          </thead>
+          <tbody id="recordTable" class="text-sm">
+            <!-- Dynamic rows inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('recordForm');
+    const table = document.getElementById('recordTable');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const values = [...form.elements].map(el => el.value);
+      const row = `
+        <tr class="border-b hover:bg-gray-50">
+          <td class="p-3">${values[0]}</td>
+          <td class="p-3">${values[2]}</td>
+          <td class="p-3">${values[3]}</td>
+          <td class="p-3">${values[4]}</td>
+          <td class="p-3">${values[5]}</td>
+          <td class="p-3">${values[6]}</td>
+          <td class="p-3">
+            <button onclick="this.closest('tr').remove()" class="text-red-600 hover:underline">Delete</button>
+          </td>
+        </tr>`;
+      table.innerHTML += row;
+      form.reset();
+    });
+  </script>
+
+</body>
+</html>

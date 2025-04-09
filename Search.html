@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search & Filter Records</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-blue-800 mb-6">Search & Filter Records</h1>
+
+    <!-- Search & Filter Form -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <input type="text" id="searchInput" placeholder="Search by patient name..." class="p-3 border border-gray-300 rounded-lg w-full" />
+
+      <select id="caseFilter" class="p-3 border border-gray-300 rounded-lg w-full">
+        <option value="">All Case Types</option>
+        <option>Accident</option>
+        <option>Assault</option>
+        <option>Post-Mortem</option>
+      </select>
+
+      <select id="deptFilter" class="p-3 border border-gray-300 rounded-lg w-full">
+        <option value="">All Departments</option>
+        <option>Emergency</option>
+        <option>Forensic</option>
+        <option>Orthopedics</option>
+        <option>Surgery</option>
+      </select>
+
+      <select id="statusFilter" class="p-3 border border-gray-300 rounded-lg w-full">
+        <option value="">All Statuses</option>
+        <option>Open</option>
+        <option>Pending</option>
+        <option>Closed</option>
+      </select>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto border-t">
+        <thead class="bg-blue-100 text-gray-700">
+          <tr>
+            <th class="p-3 text-left">Patient Name</th>
+            <th class="p-3 text-left">Case Type</th>
+            <th class="p-3 text-left">Department</th>
+            <th class="p-3 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody id="recordTable" class="text-sm">
+          <!-- Records inserted by script -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      { name: "John Doe", case: "Accident", dept: "Emergency", status: "Open" },
+      { name: "Jane Smith", case: "Assault", dept: "Orthopedics", status: "Pending" },
+      { name: "Bob Lee", case: "Post-Mortem", dept: "Forensic", status: "Closed" },
+      { name: "Alice Ray", case: "Accident", dept: "Surgery", status: "Closed" },
+      { name: "Tom Adams", case: "Assault", dept: "Emergency", status: "Open" },
+    ];
+
+    const table = document.getElementById("recordTable");
+    const searchInput = document.getElementById("searchInput");
+    const caseFilter = document.getElementById("caseFilter");
+    const deptFilter = document.getElementById("deptFilter");
+    const statusFilter = document.getElementById("statusFilter");
+
+    function renderTable(filteredData) {
+      table.innerHTML = filteredData.map(item => `
+        <tr class="border-b hover:bg-gray-50">
+          <td class="p-3">${item.name}</td>
+          <td class="p-3">${item.case}</td>
+          <td class="p-3">${item.dept}</td>
+          <td class="p-3">${item.status}</td>
+        </tr>
+      `).join('');
+    }
+
+    function filterData() {
+      const keyword = searchInput.value.toLowerCase();
+      const caseVal = caseFilter.value;
+      const deptVal = deptFilter.value;
+      const statusVal = statusFilter.value;
+
+      const filtered = data.filter(item => {
+        return (
+          item.name.toLowerCase().includes(keyword) &&
+          (caseVal === "" || item.case === caseVal) &&
+          (deptVal === "" || item.dept === deptVal) &&
+          (statusVal === "" || item.status === statusVal)
+        );
+      });
+
+      renderTable(filtered);
+    }
+
+    searchInput.addEventListener("input", filterData);
+    caseFilter.addEventListener("change", filterData);
+    deptFilter.addEventListener("change", filterData);
+    statusFilter.addEventListener("change", filterData);
+
+    // Initial render
+    renderTable(data);
+  </script>
+
+</body>
+</html>

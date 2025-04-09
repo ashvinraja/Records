@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans tracking-wide">
+
+  <div class="max-w-6xl mx-auto p-8">
+    <h1 class="text-3xl font-bold text-blue-800 mb-6">📁 Document Management</h1>
+
+    <!-- Upload Form -->
+    <div class="bg-white p-6 rounded-xl shadow mb-10">
+      <h2 class="text-xl font-semibold text-gray-700 mb-4">Upload New Document</h2>
+      <form id="docForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="text" placeholder="Document Title" class="p-3 border rounded-lg" required />
+        
+        <select class="p-3 border rounded-lg" required>
+          <option value="">Select Category</option>
+          <option>Legal Report</option>
+          <option>Lab Result</option>
+          <option>Consent Form</option>
+          <option>Discharge Summary</option>
+        </select>
+
+        <textarea placeholder="Description (optional)" class="p-3 border rounded-lg md:col-span-2" rows="3"></textarea>
+
+        <input type="file" accept=".pdf,.doc,.docx" class="p-3 border rounded-lg md:col-span-2" required />
+
+        <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg md:col-span-2">Upload Document</button>
+      </form>
+    </div>
+
+    <!-- Search -->
+    <div class="mb-4">
+      <input id="searchInput" type="text" placeholder="Search documents..." class="w-full p-3 border border-gray-300 rounded-lg" />
+    </div>
+
+    <!-- Document Table -->
+    <div class="bg-white p-6 rounded-xl shadow overflow-x-auto">
+      <h2 class="text-xl font-semibold mb-4 text-gray-700">Uploaded Documents</h2>
+      <table class="min-w-full table-auto">
+        <thead>
+          <tr class="bg-blue-100 text-gray-700">
+            <th class="p-3 text-left">Title</th>
+            <th class="p-3 text-left">Category</th>
+            <th class="p-3 text-left">Description</th>
+            <th class="p-3 text-left">Action</th>
+          </tr>
+        </thead>
+        <tbody id="docTable" class="text-sm">
+          <!-- Rows will be inserted here dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const docForm = document.getElementById('docForm');
+    const docTable = document.getElementById('docTable');
+    const searchInput = document.getElementById('searchInput');
+
+    const documents = [];
+
+    function renderTable(filteredDocs) {
+      docTable.innerHTML = filteredDocs.map((doc, index) => `
+        <tr class="border-b hover:bg-gray-50">
+          <td class="p-3">${doc.title}</td>
+          <td class="p-3">${doc.category}</td>
+          <td class="p-3">${doc.description}</td>
+          <td class="p-3">
+            <button onclick="deleteDocument(${index})" class="text-red-600 hover:underline">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteDocument(index) {
+      documents.splice(index, 1);
+      renderTable(documents);
+    }
+
+    docForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const [titleInput, categorySelect, descTextarea] = docForm.querySelectorAll('input, select, textarea');
+      const newDoc = {
+        title: titleInput.value,
+        category: categorySelect.value,
+        description: descTextarea.value || '-'
+      };
+      documents.push(newDoc);
+      renderTable(documents);
+      docForm.reset();
+    });
+
+    searchInput.addEventListener('input', function() {
+      const keyword = this.value.toLowerCase();
+      const filtered = documents.filter(doc =>
+        doc.title.toLowerCase().includes(keyword) ||
+        doc.category.toLowerCase().includes(keyword) ||
+        doc.description.toLowerCase().includes(keyword)
+      );
+      renderTable(filtered);
+    });
+
+    // Initial render
+    renderTable(documents);
+  </script>
+
+</body>
+</html>
